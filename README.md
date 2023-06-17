@@ -1,2 +1,2 @@
 # EAC-5000_src
-Source code for EAC-5000.
+Source code for EAC-5000 based on NVIDIA R35.3.1 kernel sources. Addditional drivers are added for supporting Leopard Imaging's imx728 camera's.
