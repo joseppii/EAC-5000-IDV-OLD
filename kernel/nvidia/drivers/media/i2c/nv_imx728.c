@@ -297,8 +297,10 @@ static int imx728_set_gain(struct tegracam_device *tc_dev, s64 val)
 	for (i = 0; i < 2; i++) {
 		err = imx728_write_reg(priv->s_data, reg_list[i].addr,
 			 reg_list[i].val);
-		if (err)
+		if (err) {
+			dev_info(dev, "%s: GAIN control error 0x%x = %x\n", __func__,reg_list[i].addr,reg_list[i].val);
 			goto fail;
+		}
 	}
 
 	return 0;

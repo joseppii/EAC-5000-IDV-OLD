@@ -116,9 +116,10 @@ struct max9295 {
 	__u32 pst2_ref;
 };
 
-#define MAX_CHANNEL_NUM 8 
-static __u32 channel_count_leopard;    /* count channel,max MAX_CHANNEL_NUM*/
+#define MAX_CHANNEL_NUM 4
+static __u32 channel_count_leopard;	/* count channel,max MAX_CHANNEL_NUM*/
 static struct max9295 *prim_priv__[MAX_CHANNEL_NUM];
+
 struct map_ctx {
 	u8 dt;
 	u16 addr;
@@ -128,14 +129,14 @@ struct map_ctx {
 
 static int max9295_read_reg(struct device *dev, u16 addr, u8 *val)
 {
-       struct max9295 *priv = dev_get_drvdata(dev);
-       int err;
-       u32 reg_val = 0;
+	struct max9295 *priv = dev_get_drvdata(dev);
+	int err;
+	u32 reg_val = 0;
 
-       err = regmap_read(priv->regmap, addr, &reg_val);
-       *val = reg_val & 0xFF;
+	err = regmap_read(priv->regmap, addr, &reg_val);
+	*val = reg_val & 0xFF;
 
-       return err;
+	return err;
 }
 
 
@@ -172,7 +173,7 @@ int max9295_setup_streaming(struct device *dev)
 	u32 j;
 	u32 st_en;
 	u8 temp;
-
+		
 	struct map_ctx map_pipe_dtype[] = {
 		{GMSL_CSI_DT_RAW_12, MAX9295_PIPE_Z_DT_ADDR, 0x2B,
 			MAX9295_ST_ID_2},
@@ -282,9 +283,9 @@ int max9295_setup_streaming(struct device *dev)
 	max9295_write_reg(dev, MAX9295_START_PIPE_ADDR, st_pipe);
 	max9295_write_reg(dev, MAX9295_CSI_PORT_SEL_ADDR, port_sel);
 	max9295_write_reg(dev, MAX9295_PIPE_EN_ADDR, pipe_en);
-        max9295_read_reg(dev, 0x01, &temp);
-        temp = (temp & 0xF0) | 0x0B;
-        max9295_write_reg(dev, 0x01, temp);
+	max9295_read_reg(dev, 0x01, &temp);
+	temp = (temp & 0xF0) | 0x0B;
+	max9295_write_reg(dev, 0x01, temp);
 
 	priv->g_client.st_done = true;
 
@@ -387,7 +388,7 @@ int max9295_setup_control(struct device *dev)
 
 	max9295_write_reg(dev, MAX9295_SRC_PWDN_ADDR, MAX9295_PWDN_GPIO);
 	max9295_write_reg(dev, MAX9295_SRC_PWDN_ADDR, 0x80);
-        max9295_write_reg(dev, MAX9295_SRC_PWDN_ADDR, MAX9295_PWDN_GPIO);
+	max9295_write_reg(dev, MAX9295_SRC_PWDN_ADDR, MAX9295_PWDN_GPIO);
 	max9295_write_reg(dev, MAX9295_SRC_CTRL_ADDR, MAX9295_RESET_SRC);
 	max9295_write_reg(dev, MAX9295_SRC_OUT_RCLK_ADDR, MAX9295_SRC_RCLK);
 
@@ -413,14 +414,13 @@ int max9295_reset_control(struct device *dev)
 
 	priv->g_client.st_done = false;
 
-
-        if (prim_priv__[priv->g_client.g_ctx->reg_mux]) {
-                prim_priv__[priv->g_client.g_ctx->reg_mux]->pst2_ref--;
-                max9295_write_reg(dev, MAX9295_SRC_PWDN_ADDR, MAX9295_PWDN_GPIO);
-                max9295_write_reg(dev, MAX9295_SRC_PWDN_ADDR, 0x80);
-                max9295_write_reg(dev, MAX9295_SRC_PWDN_ADDR, MAX9295_PWDN_GPIO);
-                max9295_write_reg(dev, MAX9295_DEV_ADDR, (prim_priv__[priv->g_client.g_ctx->reg_mux]->def_addr << 1));
-                max9295_write_reg(&prim_priv__[priv->g_client.g_ctx->reg_mux]->i2c_client->dev, MAX9295_CTRL0_ADDR, MAX9295_RESET_ALL);
+	if (prim_priv__[priv->g_client.g_ctx->reg_mux]) {
+		prim_priv__[priv->g_client.g_ctx->reg_mux]->pst2_ref--;
+		max9295_write_reg(dev, MAX9295_SRC_PWDN_ADDR, MAX9295_PWDN_GPIO);
+		max9295_write_reg(dev, MAX9295_SRC_PWDN_ADDR, 0x80);
+		max9295_write_reg(dev, MAX9295_SRC_PWDN_ADDR, MAX9295_PWDN_GPIO);
+		max9295_write_reg(dev, MAX9295_DEV_ADDR, (prim_priv__[priv->g_client.g_ctx->reg_mux]->def_addr << 1));
+		max9295_write_reg(&prim_priv__[priv->g_client.g_ctx->reg_mux]->i2c_client->dev, MAX9295_CTRL0_ADDR, MAX9295_RESET_ALL);
 	}
 
 error:
@@ -533,9 +533,8 @@ static int max9295_probe(struct i2c_client *client,
 		}
 
 		//prim_priv__ = priv;
-                prim_priv__[channel_count_leopard] = priv;
-                channel_count_leopard++;
-
+		prim_priv__[channel_count_leopard] = priv;
+		channel_count_leopard++;
 	}
 
 	dev_set_drvdata(&client->dev, priv);
@@ -550,8 +549,8 @@ static int max9295_remove(struct i2c_client *client)
 {
 	struct max9295 *priv;
 
-	if (channel_count_leopard > 0)
-        	       channel_count_leopard--;
+	 if (channel_count_leopard > 0)
+		channel_count_leopard--;
 
 	if (client != NULL) {
 		priv = dev_get_drvdata(&client->dev);

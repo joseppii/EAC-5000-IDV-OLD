@@ -131,14 +131,14 @@ struct max9296 {
 
 static int max9296_read_reg(struct device *dev, u16 addr, u8 *val)
 {
-       struct max9296 *priv = dev_get_drvdata(dev);
-       int err;
-       u32 reg_val = 0;
+	struct max9296 *priv = dev_get_drvdata(dev);
+	int err;
+	u32 reg_val = 0;
 
-       err = regmap_read(priv->regmap, addr, &reg_val);
-       *val = reg_val & 0xFF;
+	err = regmap_read(priv->regmap, addr, &reg_val);
+	*val = reg_val & 0xFF;
 
-       return err;
+	return err;
 }
 
 static int max9296_write_reg(struct device *dev,
@@ -584,11 +584,11 @@ static int max9296_setup_pipeline(struct device *dev,
 	u32 i = 0;
 	u32 j = 0;
 	u32 vc_idx = 0;
-        u8 temp;
+	u8 temp;
 
-        max9296_read_reg(dev, 0x01, &temp);
-        temp = (temp & 0xF0) | 0x0E;
-        max9296_write_reg(dev, 0x01, temp);
+	max9296_read_reg(dev, 0x01, &temp);
+	temp = (temp & 0xF0) | 0x0E;
+	max9296_write_reg(dev, 0x01, temp);
 
 	for (i = 0; i < g_ctx->num_streams; i++) {
 		/* Base data type mapping: pipeX/RAW12/CSICNTR1 */
@@ -884,6 +884,7 @@ static int max9296_probe(struct i2c_client *client,
 {
 	struct max9296 *priv;
 	int err = 0;
+	u8 temp;
 
 	dev_info(&client->dev, "[MAX9296]: probing GMSL Deserializer\n");
 
@@ -914,7 +915,10 @@ static int max9296_probe(struct i2c_client *client,
 	mutex_init(&priv->lock);
 
 	dev_set_drvdata(&client->dev, priv);
+	
 
+        max9296_read_reg(&client->dev, 0x01, &temp);
+	dev_info(&client->dev, "%s:  success reading %d \n", __func__, temp);
 	/* dev communication gets validated when GMSL link setup is done */
 	dev_info(&client->dev, "%s:  success\n", __func__);
 
