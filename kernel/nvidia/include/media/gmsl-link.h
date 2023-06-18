@@ -1,5 +1,7 @@
 /*
- * Copyright (c) 2018-2020, NVIDIA Corporation.  All rights reserved.
+ * Copyright (C) 2023, IDV S.p.a
+ * Copyright (C) 2023, Leopardimaging Inc.
+ * Based on Copyright (c) 2021-2022, NVIDIA CORPORATION.  All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
@@ -87,6 +89,7 @@ struct gmsl_link_ctx {
 	__u32 num_csi_lanes;    /**< Sensor's CSI lane configuration. */
 	__u32 csi_mode;         /**< Deserializer CSI mode. */
 	__u32 ser_reg;          /**< Serializer slave address. */
+	__u32 reg_mux;
 	__u32 sdev_reg;         /**< Sensor proxy slave address. */
 	__u32 sdev_def;         /**< Sensor default slave address. */
 	bool serdev_found;      /**< Indicates whether the serializer device for
