@@ -745,7 +745,7 @@
 			eqos_rd0_pe6 {
 				nvidia,pins = "eqos_rd0_pe6";
 				nvidia,function = "eqos";
-				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
+				nvidia,pull = <TEGRA_PIN_PULL_UP>;
 				nvidia,tristate = <TEGRA_PIN_ENABLE>;
 				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
 			};
@@ -753,14 +753,14 @@
 			eqos_rd1_pe7 {
 				nvidia,pins = "eqos_rd1_pe7";
 				nvidia,function = "eqos";
-				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
+				nvidia,pull = <TEGRA_PIN_PULL_UP>;
 				nvidia,tristate = <TEGRA_PIN_ENABLE>;
 				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
 			};
 			eqos_rd2_pf0 {
 				nvidia,pins = "eqos_rd2_pf0";
 				nvidia,function = "eqos";
-				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
+				nvidia,pull = <TEGRA_PIN_PULL_UP>;
 				nvidia,tristate = <TEGRA_PIN_ENABLE>;
 				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
 			};
@@ -768,7 +768,7 @@
 			eqos_rd3_pf1 {
 				nvidia,pins = "eqos_rd3_pf1";
 				nvidia,function = "eqos";
-				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
+				nvidia,pull = <TEGRA_PIN_PULL_UP>;
 				nvidia,tristate = <TEGRA_PIN_ENABLE>;
 				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
 			};
@@ -776,7 +776,7 @@
 			eqos_rx_ctl_pf2 {
 				nvidia,pins = "eqos_rx_ctl_pf2";
 				nvidia,function = "eqos";
-				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
+				nvidia,pull = <TEGRA_PIN_PULL_UP>;
 				nvidia,tristate = <TEGRA_PIN_ENABLE>;
 				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
 			};
@@ -784,7 +784,7 @@
 			eqos_rxc_pf3 {
 				nvidia,pins = "eqos_rxc_pf3";
 				nvidia,function = "eqos";
-				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
+				nvidia,pull = <TEGRA_PIN_PULL_UP>;
 				nvidia,tristate = <TEGRA_PIN_ENABLE>;
 				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
 			};
