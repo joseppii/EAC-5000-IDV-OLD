@@ -50,7 +50,7 @@
 					//streams = "yuv8";
 					reg = <0x48>;
 					csi-mode = "2x4";
-					max-src = <1>;
+					max-src = <2>;
 					fsync-gpio = <6>; //fsync gpio on 9296
 					reset-gpios = <&tegra_main_gpio CAM0_PWDN GPIO_ACTIVE_HIGH>;
 					//reset-gpios = <&tegra_main_gpio CAM0_RST_L GPIO_ACTIVE_HIGH>;
@@ -65,11 +65,15 @@
 					reg = <0x40>;
 					nvidia,gmsl-dser-device = <&dser>;
 				};
-				
+				ser_b: max9295_b@60 {
+					compatible = "maxim,max9295";
+					reg = <0x60>;
+					nvidia,gmsl-dser-device = <&dser>;
+				};
 				imx728_a@1b {
 					reg = <0x1b>;
 					reg_mux = <0>;
-					def-addr = <0x1b>;	
+					def-addr = <0x1b>;
 					/* Define any required hw resources needed by driver */
 					/* ie. clocks, io pins, power sources */
 					clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
@@ -79,6 +83,7 @@
 					nvidia,gmsl-ser-device = <&ser_a>;
 					nvidia,gmsl-dser-device = <&dser>;
 				};
+
 			};
 			i2c@1 {
 				reg = <1>;
@@ -91,13 +96,13 @@
 					//streams = "yuv8";
 					reg = <0x48>;
 					csi-mode = "2x4";
-					max-src = <1>;
-					fsync-gpio = <6>; //fsync gpio on 9296
+					max-src = <2>;
 					reset-gpios = <&tegra_main_gpio CAM1_PWDN GPIO_ACTIVE_HIGH>;
-					//reset-gpios = <&tegra_main_gpio CAM1_RST_L GPIO_ACTIVE_HIGH>;
+                                        fsync-gpio = <6>; //fsync gpio on 9296
 				};
 				ser_prima: max9295_prim@62 {
 					compatible = "maxim,max9295";
+					//streams = "yuv8";
 					reg = <0x62>;
 					is-prim-ser;
 				};
@@ -106,12 +111,15 @@
 					reg = <0x40>;
 					nvidia,gmsl-dser-device = <&dsera>;
 				};
-				imx728_b@1b {
+				ser_d: max9295_b@60 {
+					compatible = "maxim,max9295";
+					reg = <0x60>;
+					nvidia,gmsl-dser-device = <&dsera>;
+				};
+				imx728_c@1b {
 					reg = <0x1b>;
 					reg_mux = <1>;
-					def-addr = <0x1b>;	
-					/* Define any required hw resources needed by driver */
-					/* ie. clocks, io pins, power sources */
+					def-addr = <0x1b>;
 					clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
 							<&bpmp_clks TEGRA234_CLK_EXTPERIPH1>;
 					clock-names = "extperiph1", "pllp_grtba";
@@ -119,7 +127,9 @@
 					nvidia,gmsl-ser-device = <&ser_c>;
 					nvidia,gmsl-dser-device = <&dsera>;
 				};
+
 			};
+
 		};
 		tca9543@73 {
 			compatible = "nxp,pca9543";
@@ -131,25 +141,23 @@
 			vcc-supply = <&p3737_vdd_1v8_sys>;
 			vcc-pullup-supply = <&battery_reg>;
 			force_bus_start = <CAMERA_I2C_MUX_BUS(2)>;
-
 			i2c@0 {
 				reg = <0>;
 				i2c-mux,deselect-on-exit;
 				#address-cells = <1>;
 				#size-cells = <0>;
-				i2c-mux-idle-disconnect;
 				dserb: max9296@48 {
 					compatible = "maxim,max9296";
 					//streams = "yuv8";
 					reg = <0x48>;
 					csi-mode = "2x4";
-					max-src = <1>;
-					fsync-gpio = <6>; //fsync gpio on 9296
+					max-src = <2>;
 					reset-gpios = <&tegra_main_gpio CAM2_PWDN GPIO_ACTIVE_HIGH>;
-					//reset-gpios = <&tegra_main_gpio CAM0_RST_L GPIO_ACTIVE_HIGH>;
+                                        fsync-gpio = <6>; //fsync gpio on 9296
 				};
 				ser_primb: max9295_prim@62 {
 					compatible = "maxim,max9295";
+					//streams = "yuv8";
 					reg = <0x62>;
 					is-prim-ser;
 				};
@@ -158,11 +166,15 @@
 					reg = <0x40>;
 					nvidia,gmsl-dser-device = <&dserb>;
 				};
-				
-				imx728_o@1b {
+				ser_f: max9295_b@60 {
+					compatible = "maxim,max9295";
+					reg = <0x60>;
+					nvidia,gmsl-dser-device = <&dserb>;
+				};
+				imx728_e@1b {
 					reg = <0x1b>;
 					reg_mux = <2>;
-					def-addr = <0x1b>;	
+					def-addr = <0x1b>;
 					/* Define any required hw resources needed by driver */
 					/* ie. clocks, io pins, power sources */
 					clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
@@ -172,7 +184,53 @@
 					nvidia,gmsl-ser-device = <&ser_e>;
 					nvidia,gmsl-dser-device = <&dserb>;
 				};
+
 			};
+			i2c@1 {
+				reg = <1>;
+				i2c-mux,deselect-on-exit;
+				#address-cells = <1>;
+				#size-cells = <0>;
+				dserc: max9296@48 {
+					compatible = "maxim,max9296";
+					//streams = "yuv8";
+					reg = <0x48>;
+					csi-mode = "2x4";
+					max-src = <2>;
+					reset-gpios = <&tegra_main_gpio CAM3_PWDN GPIO_ACTIVE_HIGH>;
+                                        fsync-gpio = <6>; //fsync gpio on 9296
+				};
+				ser_primc: max9295_prim@62 {
+					compatible = "maxim,max9295";
+					//streams = "yuv8";
+					reg = <0x62>;
+					is-prim-ser;
+				};
+				ser_g: max9295_a@40 {
+					compatible = "maxim,max9295";
+					reg = <0x40>;
+					nvidia,gmsl-dser-device = <&dserc>;
+				};
+				ser_h: max9295_b@60 {
+					compatible = "maxim,max9295";
+					reg = <0x60>;
+					nvidia,gmsl-dser-device = <&dserc>;
+				};
+				imx728_g@1b {
+					reg = <0x1b>;
+					reg_mux = <3>;	
+					def-addr = <0x1b>;
+					clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
+							<&bpmp_clks TEGRA234_CLK_EXTPERIPH1>;
+					clock-names = "extperiph1", "pllp_grtba";
+					mclk = "extperiph1";
+					nvidia,gmsl-ser-device = <&ser_g>;
+					nvidia,gmsl-dser-device = <&dserc>;
+				};
+
+			};
+
 		};
 	};
 };
+
