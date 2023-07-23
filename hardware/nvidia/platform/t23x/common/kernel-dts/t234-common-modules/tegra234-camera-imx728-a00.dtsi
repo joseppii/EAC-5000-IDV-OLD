@@ -1,0 +1,502 @@
+/*
+ * Copyright (c) 2018-2021, NVIDIA CORPORATION.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms and conditions of the GNU General Public License,
+ * version 2, as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+//#include <./tegra234-otocam-camera-all-mode.dtsi>
+/ {
+	tegra-capture-vi {
+		num-channels = <3>;
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			port@0 {
+				reg = <0>;
+				imx728_vi_in0: endpoint {
+					vc-id = <0>;
+					port-index = <0>;
+					bus-width = <4>;
+					remote-endpoint = <&imx728_csi_out0>;
+				};
+			};
+			port@1 {
+				reg = <1>;
+				imx728_vi_in1: endpoint {
+					vc-id = <0>;
+					port-index = <2>;
+					bus-width = <4>;
+					remote-endpoint = <&imx728_csi_out1>;
+				};
+			};
+			port@2 {
+				reg = <2>;
+				imx728_vi_in2: endpoint {
+					vc-id = <0>;
+					port-index = <4>;
+					bus-width = <4>;
+					remote-endpoint = <&imx728_csi_out2>;
+				};
+			};
+		};
+	};
+
+	host1x@13e00000 {
+		nvcsi@15a00000 {
+			num-channels = <3>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			channel@0 {
+				reg = <0>;
+				ports {
+					#address-cells = <1>;
+					#size-cells = <0>;
+					port@0 {
+						reg = <0>;
+						imx728_csi_in0: endpoint@0 {
+							port-index = <0>;
+							bus-width = <4>;
+							remote-endpoint = <&imx728_out0>;
+						};
+					};
+					port@1 {
+						reg = <1>;
+						imx728_csi_out0: endpoint@1 {
+							remote-endpoint = <&imx728_vi_in0>;
+						};
+					};
+				};
+			};
+			channel@1 {
+				reg = <1>;
+				ports {
+					#address-cells = <1>;
+					#size-cells = <0>;
+					port@0 {
+						reg = <0>;
+						imx728_csi_in1: endpoint@2 {
+							port-index = <2>;
+							bus-width = <4>;
+							remote-endpoint = <&imx728_out1>;
+						};
+					};
+					port@1 {
+						reg = <1>;
+						imx728_csi_out1: endpoint@3 {
+							remote-endpoint = <&imx728_vi_in1>;
+						};
+					};
+				};
+			};
+			channel@2 {
+				reg = <2>;
+				ports {
+					#address-cells = <1>;
+					#size-cells = <0>;
+					port@0 {
+						reg = <0>;
+						imx728_csi_in2: endpoint@4 {
+							port-index = <4>;
+							bus-width = <4>;
+							remote-endpoint = <&imx728_out2>;
+						};
+					};
+					port@1 {
+						reg = <1>;
+						imx728_csi_out2: endpoint@5 {
+							remote-endpoint = <&imx728_vi_in2>;
+						};
+					};
+				};
+			};
+		};
+	};
+
+	i2c@3180000 {
+		tca9543@72 {
+			i2c@0 {
+			imx728_a@1b {
+				compatible = "sony,imx728";
+
+				//def-addr = <0x6d>;	
+				reg = <0x1b>;
+				devnode = "video0";
+				reg_mux = <0>;
+				/* Physical dimensions of sensor */
+				physical_w = "15.0";
+				physical_h = "12.5";
+
+				sensor_model ="imx728";
+
+				/* Defines number of frames to be dropped by driver internally after applying */
+				/* sensor crop settings. Some sensors send corrupt frames after applying */
+				/* crop co-ordinates */
+				post_crop_frame_drop = "0";
+
+				/* Convert Gain to unit of dB (decibel) befor passing to kernel driver */
+				//use_decibel_gain = "true";	// FIX:?
+
+				/* enable CID_SENSOR_MODE_ID for sensor modes selection */
+				use_sensor_mode_id = "true";
+				mode0 {
+					mclk_khz = "24000";
+					num_lanes = "4";
+					tegra_sinterface = "serial_a";
+					vc_id = "0";
+					discontinuous_clk = "no";
+					dpcm_enable = "false";
+					cil_settletime = "0";
+					dynamic_pixel_bit_depth = "10";
+					csi_pixel_bit_depth = "10";
+					mode_type = "bayer";
+					pixel_phase = "rggb";
+
+					active_w = "3840";
+					active_h = "2160";
+					readout_orientation = "90";
+					line_length = "4000";
+					inherent_gain = "1";
+					mclk_multiplier = "4.27";
+					pix_clk_hz = "300000000";
+					serdes_pix_clk_hz = "520000000";
+
+					gain_factor = "10";
+					min_gain_val = "30"; /* dB */
+					max_gain_val = "110"; /* dB */
+					step_gain_val = "1"; /* 0.1 */
+					default_gain = "30";
+					min_hdr_ratio = "1";
+					max_hdr_ratio = "1";
+					framerate_factor = "1000000";
+					min_framerate = "5000000";
+					max_framerate = "120000000";
+					step_framerate = "1";
+					default_framerate = "30000000";
+					exposure_factor = "1000000";
+					min_exp_time = "28"; /* us */
+					max_exp_time = "10000";
+					step_exp_time = "1";
+					default_exp_time = "1000";/* us */
+					embedded_metadata_height = "0";
+
+				};
+				ports {
+					#address-cells = <1>;
+					#size-cells = <0>;
+					port@0 {
+						reg = <0>;
+						imx728_out0: endpoint {
+							vc-id = <0>;
+							port-index = <0>;
+							bus-width = <4>;
+							remote-endpoint = <&imx728_csi_in0>;
+						};
+					};
+				};
+				gmsl-link {
+					src-csi-port = "b";
+					dst-csi-port = "a";
+					serdes-csi-link = "a";
+					csi-mode = "1x4";
+					st-vc = <0>;
+					vc-id = <0>;
+					num-lanes = <4>;
+					streams = "ued-u1", "raw12";	// FIX:-
+				};
+			};
+		};
+			i2c@1 {
+			imx728_b@1b {
+				compatible = "sony,imx728";
+
+				//def-addr = <0x6d>;	
+				reg = <0x1b>;
+				devnode = "video1";
+				reg_mux = <1>;
+				/* Physical dimensions of sensor */
+				physical_w = "15.0";
+				physical_h = "12.5";
+
+				sensor_model ="imx728";
+
+				/* Defines number of frames to be dropped by driver internally after applying */
+				/* sensor crop settings. Some sensors send corrupt frames after applying */
+				/* crop co-ordinates */
+				post_crop_frame_drop = "0";
+
+				/* Convert Gain to unit of dB (decibel) befor passing to kernel driver */
+				//use_decibel_gain = "true";	// FIX:?
+
+				/* enable CID_SENSOR_MODE_ID for sensor modes selection */
+				use_sensor_mode_id = "true";
+				mode0 {
+					mclk_khz = "24000";
+					num_lanes = "4";
+					tegra_sinterface = "serial_c";
+					vc_id = "0";
+					discontinuous_clk = "no";
+					dpcm_enable = "false";
+					cil_settletime = "0";
+					dynamic_pixel_bit_depth = "10";
+					csi_pixel_bit_depth = "10";
+					mode_type = "bayer";
+					pixel_phase = "rggb";
+
+					active_w = "3840";
+					active_h = "2160";
+					readout_orientation = "90";
+					line_length = "4000";
+					inherent_gain = "1";
+					mclk_multiplier = "4.27";
+					pix_clk_hz = "300000000";
+					serdes_pix_clk_hz = "520000000";
+
+					gain_factor = "10";
+					min_gain_val = "30"; /* dB */
+					max_gain_val = "110"; /* dB */
+					step_gain_val = "1"; /* 0.1 */
+					default_gain = "30";
+					min_hdr_ratio = "1";
+					max_hdr_ratio = "1";
+					framerate_factor = "1000000";
+					min_framerate = "5000000";
+					max_framerate = "120000000";
+					step_framerate = "1";
+					default_framerate = "30000000";
+					exposure_factor = "1000000";
+					min_exp_time = "28"; /* us */
+					max_exp_time = "10000";
+					step_exp_time = "1";
+					default_exp_time = "1000";/* us */
+					embedded_metadata_height = "0";
+
+				};
+				ports {
+					#address-cells = <1>;
+					#size-cells = <0>;
+					port@0 {
+						reg = <0>;
+						imx728_out1: endpoint {
+							vc-id = <0>;
+							port-index = <2>;
+							bus-width = <4>;
+							remote-endpoint = <&imx728_csi_in1>;
+						};
+					};
+				};
+				gmsl-link {
+					src-csi-port = "b";
+					dst-csi-port = "a";
+					serdes-csi-link = "a";
+					csi-mode = "1x4";
+					st-vc = <0>;
+					vc-id = <0>;
+					num-lanes = <4>;
+					streams = "ued-u1", "raw12";	// FIX:-
+				};
+			};
+		};
+	};
+		tca9543@73 {
+			i2c@0 {
+			imx728_a@1b {
+				compatible = "sony,imx728";
+
+				//def-addr = <0x6d>;	
+				reg = <0x1b>;
+				devnode = "video2";
+				reg_mux = <2>;
+				/* Physical dimensions of sensor */
+				physical_w = "15.0";
+				physical_h = "12.5";
+
+				sensor_model ="imx728";
+
+				/* Defines number of frames to be dropped by driver internally after applying */
+				/* sensor crop settings. Some sensors send corrupt frames after applying */
+				/* crop co-ordinates */
+				post_crop_frame_drop = "0";
+
+				/* Convert Gain to unit of dB (decibel) befor passing to kernel driver */
+				//use_decibel_gain = "true";	// FIX:?
+
+				/* enable CID_SENSOR_MODE_ID for sensor modes selection */
+				use_sensor_mode_id = "true";
+				mode0 {
+					mclk_khz = "24000";
+					num_lanes = "4";
+					tegra_sinterface = "serial_e";
+					vc_id = "0";
+					discontinuous_clk = "no";
+					dpcm_enable = "false";
+					cil_settletime = "0";
+					dynamic_pixel_bit_depth = "10";
+					csi_pixel_bit_depth = "10";
+					mode_type = "bayer";
+					pixel_phase = "rggb";
+
+					active_w = "3840";
+					active_h = "2160";
+					readout_orientation = "90";
+					line_length = "4000";
+					inherent_gain = "1";
+					mclk_multiplier = "4.27";
+					pix_clk_hz = "300000000";
+					serdes_pix_clk_hz = "520000000";
+
+					gain_factor = "10";
+					min_gain_val = "30"; /* dB */
+					max_gain_val = "110"; /* dB */
+					step_gain_val = "1"; /* 0.1 */
+					default_gain = "30";
+					min_hdr_ratio = "1";
+					max_hdr_ratio = "1";
+					framerate_factor = "1000000";
+					min_framerate = "5000000";
+					max_framerate = "120000000";
+					step_framerate = "1";
+					default_framerate = "30000000";
+					exposure_factor = "1000000";
+					min_exp_time = "28"; /* us */
+					max_exp_time = "10000";
+					step_exp_time = "1";
+					default_exp_time = "1000";/* us */
+					embedded_metadata_height = "0";
+
+				};
+				ports {
+					#address-cells = <1>;
+					#size-cells = <0>;
+					port@0 {
+						reg = <0>;
+						imx728_out2: endpoint {
+							vc-id = <0>;
+							port-index = <4>;
+							bus-width = <4>;
+							remote-endpoint = <&imx728_csi_in2>;
+						};
+					};
+				};
+				gmsl-link {
+					src-csi-port = "b";
+					dst-csi-port = "a";
+					serdes-csi-link = "a";
+					csi-mode = "1x4";
+					st-vc = <0>;
+					vc-id = <0>;
+					num-lanes = <4>;
+					streams = "ued-u1", "raw12";	// FIX:-
+				};
+			};
+		};
+	};
+};
+
+
+};
+
+/ {
+
+	tcp: tegra-camera-platform {
+		compatible = "nvidia, tegra-camera-platform";
+		/**
+		* Physical settings to calculate max ISO BW
+		*
+		* num_csi_lanes = <>;
+		* Total number of CSI lanes when all cameras are active
+		*
+		* max_lane_speed = <>;
+		* Max lane speed in Kbit/s
+		*
+		* min_bits_per_pixel = <>;
+		* Min bits per pixel
+		*
+		* vi_peak_byte_per_pixel = <>;
+		* Max byte per pixel for the VI ISO case
+		*
+		* vi_bw_margin_pct = <>;
+		* Vi bandwidth margin in percentage
+		*
+		* max_pixel_rate = <>;
+		* Max pixel rate in Kpixel/s for the ISP ISO case
+		*
+		* isp_peak_byte_per_pixel = <>;
+		* Max byte per pixel for the ISP ISO case
+		*
+		* isp_bw_margin_pct = <>;
+		* Isp bandwidth margin in percentage
+		*/
+		num_csi_lanes = <8>;
+//#ifdef CAM_SERDES_GMSL)
+		max_lane_speed = <1500000>;
+//#else	// CAM_SERDES_FPDL
+//		max_lane_speed = <1500000>;	// FIX:?
+//#endif
+		min_bits_per_pixel = <10>;	// FIX:* 10
+		vi_peak_byte_per_pixel = <2>;
+		vi_bw_margin_pct = <25>;
+		//max_pixel_rate = <7500000>;	// FIX:? 160|200|300|750
+		isp_peak_byte_per_pixel = <5>;
+		isp_bw_margin_pct = <25>;
+
+		/**
+		 * The general guideline for naming badge_info contains 3 parts, and is as follows,
+		 * The first part is the camera_board_id for the module; if the module is in a FFD
+		 * platform, then use the platform name for this part.
+		 * The second part contains the position of the module, ex. "rear" or "front".
+		 * The third part contains the last 6 characters of a part number which is found
+		 * in the module's specsheet from the vender.
+		 */
+		modules {
+			module0 {
+				badge = "imx728_rear";
+				position = "rear";
+				orientation = "1";
+				drivernode0 {
+					/* Declare PCL support driver (classically known as guid)  */
+					pcl_id = "v4l2_sensor";
+					/* Driver v4l2 device name */
+					devname = "imx728 30-001b";
+					/* Declare the device-tree hierarchy to driver instance */
+					proc-device-tree = "/proc/device-tree/i2c@3180000/tca9543@72/i2c@0/imx728_a@1b";
+				};
+			};
+			module1 {
+				badge = "imx728_front";
+				position = "front";
+				orientation = "0";
+				drivernode0 {
+					/* Declare PCL support driver (classically known as guid)  */
+					pcl_id = "v4l2_sensor";
+					/* Driver v4l2 device name */
+					devname = "imx728 31-001b";
+					/* Declare the device-tree hierarchy to driver instance */
+					proc-device-tree = "/proc/device-tree/i2c@3180000/tca9543@72/i2c@1/imx728_b@1b";
+				};
+			};
+			module2 {
+				badge = "imx728_left";
+				position = "left";
+				orientation = "0";
+				drivernode0 {
+					/* Declare PCL support driver (classically known as guid)  */
+					pcl_id = "v4l2_sensor";
+					/* Driver v4l2 device name */
+					devname = "imx728 32-001b";
+					/* Declare the device-tree hierarchy to driver instance */
+					proc-device-tree = "/proc/device-tree/i2c@3180000/tca9543@73/i2c@0/imx728_o@1b";
+				};
+			};
+		};
+	};
+};
+
