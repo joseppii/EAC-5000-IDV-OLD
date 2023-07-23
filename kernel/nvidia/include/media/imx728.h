@@ -1,4 +1,4 @@
-*
+/*
  * imx728_.h - imx728 sensor header
  *
  * Copyright (C) 2023, Leopardimaging Inc.

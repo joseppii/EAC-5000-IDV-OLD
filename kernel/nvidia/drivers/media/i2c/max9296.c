@@ -362,7 +362,7 @@ int max9296_setup_control(struct device *dev, struct device *s_dev)
 	if ((priv->max_src > 1U) &&
 		(priv->num_src_found > 0U) &&
 		(priv->splitter_enabled == false)) {
-		..max9296_write_reg(dev, MAX9296_CTRL0_ADDR, 0x03);
+		//max9296_write_reg(dev, MAX9296_CTRL0_ADDR, 0x03);
 		//max9296_write_reg(dev, MAX9296_CTRL0_ADDR, 0x23);
 
 		priv->splitter_enabled = true;
