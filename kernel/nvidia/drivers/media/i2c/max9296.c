@@ -1,7 +1,9 @@
 /*
  * max9296.c - max9296 GMSL Deserializer driver
  *
- * Copyright (c) 2018-2022, NVIDIA CORPORATION.  All rights reserved.
+ * Copyright (C) 2023, Leopardimaging Inc.
+ * Copyright (C) 2023, IDV S.p.a
+ * Based on Copyright (c) 2021-2022, NVIDIA CORPORATION.  All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
@@ -65,7 +67,7 @@
 #define MAX9296_ALLPHYS_NOSTDBY 0xF0
 #define MAX9296_ST_ID_SEL_INVALID 0xF
 
-#define MAX9296_PHY1_CLK 0x2C
+#define MAX9296_PHY1_CLK 0x2D
 
 #define MAX9296_RESET_ALL 0x80
 
@@ -125,6 +127,18 @@ struct max9296 {
 	int pw_ref;
 	struct regulator *vdd_cam_1v2;
 };
+
+static int max9296_read_reg(struct device *dev, u16 addr, u8 *val)
+{
+       struct max9296 *priv = dev_get_drvdata(dev);
+       int err;
+       u32 reg_val = 0;
+
+       err = regmap_read(priv->regmap, addr, &reg_val);
+       *val = reg_val & 0xFF;
+
+       return err;
+}
 
 static int max9296_write_reg(struct device *dev,
 	u16 addr, u8 val)
@@ -348,8 +362,8 @@ int max9296_setup_control(struct device *dev, struct device *s_dev)
 	if ((priv->max_src > 1U) &&
 		(priv->num_src_found > 0U) &&
 		(priv->splitter_enabled == false)) {
-		max9296_write_reg(dev, MAX9296_CTRL0_ADDR, 0x03);
-		max9296_write_reg(dev, MAX9296_CTRL0_ADDR, 0x23);
+		..max9296_write_reg(dev, MAX9296_CTRL0_ADDR, 0x03);
+		//max9296_write_reg(dev, MAX9296_CTRL0_ADDR, 0x23);
 
 		priv->splitter_enabled = true;
 
@@ -569,6 +583,11 @@ static int max9296_setup_pipeline(struct device *dev,
 	u32 i = 0;
 	u32 j = 0;
 	u32 vc_idx = 0;
+        u8 temp;
+
+        max9296_read_reg(dev, 0x01, &temp);
+        temp = (temp & 0xF0) | 0x0E;
+        max9296_write_reg(dev, 0x01, temp);
 
 	for (i = 0; i < g_ctx->num_streams; i++) {
 		/* Base data type mapping: pipeX/RAW12/CSICNTR1 */
@@ -576,8 +595,8 @@ static int max9296_setup_pipeline(struct device *dev,
 			/* addr, val */
 			{MAX9296_TX11_PIPE_X_EN_ADDR, 0x7},
 			{MAX9296_TX45_PIPE_X_DST_CTRL_ADDR, 0x15},
-			{MAX9296_PIPE_X_SRC_0_MAP_ADDR, 0x2C},
-			{MAX9296_PIPE_X_DST_0_MAP_ADDR, 0x2C},
+			{MAX9296_PIPE_X_SRC_0_MAP_ADDR, 0x2B},
+			{MAX9296_PIPE_X_DST_0_MAP_ADDR, 0x2B},
 			{MAX9296_PIPE_X_SRC_1_MAP_ADDR, 0x00},
 			{MAX9296_PIPE_X_DST_1_MAP_ADDR, 0x00},
 			{MAX9296_PIPE_X_SRC_2_MAP_ADDR, 0x01},

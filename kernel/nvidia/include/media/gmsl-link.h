@@ -60,7 +60,7 @@
  * Maximum number of data streams (\ref gmsl_stream elements) in a GMSL link
  * (\ref gmsl_link_ctx).
  */
-#define GMSL_DEV_MAX_NUM_DATA_STREAMS 4
+#define GMSL_DEV_MAX_NUM_DATA_STREAMS 8
 
 /**
  * Holds information about a data stream in a GMSL link (\ref gmsl_link_ctx).
@@ -87,6 +87,7 @@ struct gmsl_link_ctx {
 	__u32 num_csi_lanes;    /**< Sensor's CSI lane configuration. */
 	__u32 csi_mode;         /**< Deserializer CSI mode. */
 	__u32 ser_reg;          /**< Serializer slave address. */
+	__u32 reg_mux;
 	__u32 sdev_reg;         /**< Sensor proxy slave address. */
 	__u32 sdev_def;         /**< Sensor default slave address. */
 	bool serdev_found;      /**< Indicates whether the serializer device for
