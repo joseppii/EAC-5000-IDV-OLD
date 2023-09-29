@@ -31,6 +31,15 @@ config VIDEO_ECAM
           To compile this driver as a module, choose M here: the module
           will be called ar1335.
 
+config VIDEO_OX08B40
+        tristate "OX08B40 camera sensor support"
+        depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
+        help
+          This driver supports ox08b40 camera sensor from omnivision
+
+          To compile this driver as a module, choose M here: the module
+          will be called ox08b40.
+
 config NV_VIDEO_IMX219
         tristate "IMX219 camera sensor support"
 	depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
@@ -163,6 +172,15 @@ config I2C_IOEXPANDER_DESER_MAX9296
 
 	  To compile this driver as a module, choose M here: the module
 	  will be called max9296.
+
+config NV_DESER_MAX929X
+        tristate "MAX929X Deserializer I2C IO Expander"
+        help
+          If you say yes here you get support for the MAX929X deserializer
+          I2C IO Expander.
+
+          To compile this driver as a module, choose M here: the module
+          will be called max929X.
 
 config NV_VIDEO_IMX390
 	tristate "IMX390 camera sensor support"

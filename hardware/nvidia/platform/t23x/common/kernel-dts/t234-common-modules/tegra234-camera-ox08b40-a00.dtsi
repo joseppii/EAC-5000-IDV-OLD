@@ -1,0 +1,581 @@
+/*
+ * Copyright (c) 2018-2021, NVIDIA CORPORATION.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms and conditions of the GNU General Public License,
+ * version 2, as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+//#include <./tegra234-otocam-camera-all-mode.dtsi>
+/ {
+	tegra-capture-vi {
+		num-channels = <4>;
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			port@0 {
+				reg = <0>;
+				imx728_vi_in0: endpoint {
+					vc-id = <0>;
+					port-index = <0>;
+					bus-width = <4>;
+					remote-endpoint = <&imx728_csi_out0>;
+				};
+			};
+			port@1 {
+				reg = <1>;
+				imx728_vi_in1: endpoint {
+					port-index = <2>;
+					bus-width = <4>;
+					remote-endpoint = <&imx728_csi_out1>;
+				};
+			};
+			port@2 {
+				reg = <2>;
+				imx728_vi_in2: endpoint {
+					port-index = <4>;
+					bus-width = <4>;
+					remote-endpoint = <&imx728_csi_out2>;
+				};
+			};
+			port@3 {
+				reg = <3>;
+				imx728_vi_in3: endpoint {
+					port-index = <5>;
+					bus-width = <4>;
+					remote-endpoint = <&imx728_csi_out3>;
+				};
+			};
+		};
+	};
+
+	host1x@13e00000 {
+		nvcsi@15a00000 {
+			num-channels = <4>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			channel@0 {
+				reg = <0>;
+				ports {
+					#address-cells = <1>;
+					#size-cells = <0>;
+					port@0 {
+						reg = <0>;
+						imx728_csi_in0: endpoint@0 {
+							port-index = <0>;
+							bus-width = <4>;
+							remote-endpoint = <&imx728_out0>;
+						};
+					};
+					port@1 {
+						reg = <1>;
+						imx728_csi_out0: endpoint@1 {
+							remote-endpoint = <&imx728_vi_in0>;
+						};
+					};
+				};
+			};
+			channel@1 {
+				reg = <1>;
+				ports {
+					#address-cells = <1>;
+					#size-cells = <0>;
+					port@0 {
+						reg = <0>;
+						imx728_csi_in1: endpoint@0 {
+							port-index = <2>;
+							bus-width = <4>;
+							remote-endpoint = <&imx728_out1>;
+						};
+					};
+					port@1 {
+						reg = <1>;
+						imx728_csi_out1: endpoint@1 {
+							remote-endpoint = <&imx728_vi_in1>;
+						};
+					};
+				};
+			};
+			channel@2 {
+				reg = <2>;
+				ports {
+					#address-cells = <1>;
+					#size-cells = <0>;
+					port@0 {
+						reg = <0>;
+						imx728_csi_in2: endpoint@0 {
+							port-index = <4>;
+							bus-width = <4>;
+							remote-endpoint = <&imx728_out2>;
+						};
+					};
+					port@1 {
+						reg = <1>;
+						imx728_csi_out2: endpoint@1 {
+							remote-endpoint = <&imx728_vi_in2>;
+						};
+					};
+				};
+			};
+			channel@3 {
+				reg = <3>;
+				ports {
+					#address-cells = <1>;
+					#size-cells = <0>;
+					port@0 {
+						reg = <0>;
+						imx728_csi_in3: endpoint@0 {
+							port-index = <5>;
+							bus-width = <4>;
+							remote-endpoint = <&imx728_out3>;
+						};
+					};
+					port@1 {
+						reg = <1>;
+						imx728_csi_out3: endpoint@1 {
+							remote-endpoint = <&imx728_vi_in3>;
+						};
+					};
+				};
+			};
+		};
+	};
+
+	i2c@3180000 {
+		tca9543@72 {
+			i2c@0 {
+			ox08b40_a@23 {
+				compatible = "nvidia,ox08b40";
+				reg = <0x23>;
+				devnode = "video0";
+				reg_mux = <0>;
+				/* Physical dimensions of sensor */
+				physical_w = "15.0";
+				physical_h = "12.5";
+
+				sensor_model ="ox08b40";
+
+				/* Defines number of frames to be dropped by driver internally after applying */
+				/* sensor crop settings. Some sensors send corrupt frames after applying */
+				/* crop co-ordinates */
+				post_crop_frame_drop = "0";
+
+				/* Convert Gain to unit of dB (decibel) befor passing to kernel driver */
+				use_decibel_gain = "true";	// FIX:?
+
+				/* if true, delay gain setting by one frame to be in sync with exposure */
+					delayed_gain = "true";
+
+				/* enable CID_SENSOR_MODE_ID for sensor modes selection */
+				use_sensor_mode_id = "true";
+				mode0 {
+					mclk_khz = "27000";
+					tegra_sinterface = "serial_a";
+					phy_mode = "DPHY";
+					vc_id = "0";
+					num_lanes = "4";
+					discontinuous_clk = "no";
+					dpcm_enable = "false";
+					cil_settletime = "0";
+					dynamic_pixel_bit_depth = "16";
+					csi_pixel_bit_depth = "16";
+					mode_type = "yuv";
+					pixel_phase = "uyvy";
+
+					active_w = "3840";
+					active_h = "2160";
+					readout_orientation = "0";
+					line_length = "5000";
+					inherent_gain = "1";
+					mclk_multiplier = "2";
+					pix_clk_hz = "168750000";
+					serdes_pix_clk_hz = "375000000";
+
+					gain_factor = "10";
+					min_gain_val = "0"; /* dB */
+					max_gain_val = "480"; /* dB */
+					step_gain_val = "3"; /* 0.1 */
+					default_gain = "0";
+					min_hdr_ratio = "1";
+					max_hdr_ratio = "1";
+					framerate_factor = "1000000";
+					min_framerate = "30000000";
+					max_framerate = "30000000";
+					step_framerate = "1";
+					default_framerate = "30000000";
+					exposure_factor = "1000000";
+					min_exp_time = "30"; /* us */
+					max_exp_time = "33000";
+					step_exp_time = "1";
+					default_exp_time = "30000";/* us */
+					embedded_metadata_height = "0";
+					
+				};
+				ports {
+					#address-cells = <1>;
+					#size-cells = <0>;
+					port@0 {
+						reg = <0>;
+						imx728_out0: endpoint {
+							vc-id = <0>;
+							port-index = <0>;
+							bus-width = <4>;
+							remote-endpoint = <&imx728_csi_in0>;
+						};
+					};
+				};
+			};
+
+		};
+
+                i2c@1 {
+                        ox08b40_c@23 {
+                                compatible = "nvidia,ox08b40";
+                                reg = <0x23>;
+                                devnode = "video1";
+                                reg_mux = <1>;
+                                physical_w = "15.0";
+                                physical_h = "12.5";
+
+                                sensor_model ="ox08b40";
+
+                                post_crop_frame_drop = "0";
+
+                                use_decibel_gain = "true";      // FIX:?
+
+                                        delayed_gain = "true";
+
+                                use_sensor_mode_id = "true";
+                                mode0 {
+                                        mclk_khz = "27000";
+                                        tegra_sinterface = "serial_c";
+                                        phy_mode = "DPHY";
+                                        vc_id = "0";
+                                        num_lanes = "4";
+                                        discontinuous_clk = "no";
+                                        dpcm_enable = "false";
+                                        cil_settletime = "0";
+                                        dynamic_pixel_bit_depth = "16";
+                                        csi_pixel_bit_depth = "16";
+                                        mode_type = "yuv";
+                                        pixel_phase = "uyvy";
+
+                                        active_w = "3840";
+                                        active_h = "2160";
+                                        readout_orientation = "0";
+                                        line_length = "5000";
+                                        inherent_gain = "1";
+                                        mclk_multiplier = "2";
+                                        pix_clk_hz = "168750000";
+                                        serdes_pix_clk_hz = "375000000";
+
+                                        gain_factor = "10";
+                                        min_gain_val = "0"; /* dB */
+                                        max_gain_val = "480"; /* dB */
+                                        step_gain_val = "3"; /* 0.1 */
+                                        default_gain = "0";
+                                        min_hdr_ratio = "1";
+                                        max_hdr_ratio = "1";
+                                        framerate_factor = "1000000";
+                                        min_framerate = "30000000";
+                                        max_framerate = "30000000";
+                                        step_framerate = "1";
+                                        default_framerate = "30000000";
+                                        exposure_factor = "1000000";
+                                        min_exp_time = "30"; /* us */
+                                        max_exp_time = "33000";
+                                        step_exp_time = "1";
+                                        default_exp_time = "30000";/* us */
+                                        embedded_metadata_height = "0";
+
+                                };
+                                ports {
+                                        #address-cells = <1>;
+                                        #size-cells = <0>;
+                                        port@0 {
+                                                reg = <0>;
+                                                imx728_out1: endpoint {
+                                                        vc-id = <0>;
+                                                        port-index = <2>;
+                                                        bus-width = <4>;
+                                                        remote-endpoint = <&imx728_csi_in1>;
+                                                };
+                                        };
+                                };
+                        };
+
+                };
+
+	};
+               tca9543@73 {
+                        i2c@0 {
+                      ox08b40_e@23 {
+                                compatible = "nvidia,ox08b40";
+                                reg = <0x23>;
+                                devnode = "video2";
+                                reg_mux = <0>;
+                                physical_w = "15.0";
+                                physical_h = "12.5";
+
+                                sensor_model ="ox08b40";
+
+                                post_crop_frame_drop = "0";
+
+                                use_decibel_gain = "true";   
+
+                                        delayed_gain = "true";
+
+                                use_sensor_mode_id = "true";
+                                mode0 {
+                                        mclk_khz = "27000";
+                                        tegra_sinterface = "serial_e";
+                                        phy_mode = "DPHY";
+                                        vc_id = "0";
+                                        num_lanes = "4";
+                                        discontinuous_clk = "no";
+                                        dpcm_enable = "false";
+                                        cil_settletime = "0";
+                                        dynamic_pixel_bit_depth = "16";
+                                        csi_pixel_bit_depth = "16";
+                                        mode_type = "yuv";
+                                        pixel_phase = "uyvy";
+
+                                        active_w = "3840";
+                                        active_h = "2160";
+                                        readout_orientation = "0";
+                                        line_length = "5000";
+                                        inherent_gain = "1";
+                                        mclk_multiplier = "2";
+                                        pix_clk_hz = "168750000";
+                                        serdes_pix_clk_hz = "375000000";
+
+                                        gain_factor = "10";
+                                        min_gain_val = "0"; 
+                                        max_gain_val = "480"; 
+                                        step_gain_val = "3"; 
+                                        default_gain = "0";
+                                        min_hdr_ratio = "1";
+                                        max_hdr_ratio = "1";
+                                        framerate_factor = "1000000";
+                                        min_framerate = "30000000";
+                                        max_framerate = "30000000";
+                                        step_framerate = "1";
+                                        default_framerate = "30000000";
+                                        exposure_factor = "1000000";
+                                        min_exp_time = "30"; 
+                                        max_exp_time = "33000";
+                                        step_exp_time = "1";
+                                        default_exp_time = "30000";
+                                        embedded_metadata_height = "0";
+
+                                };
+                                ports {
+                                        #address-cells = <1>;
+                                        #size-cells = <0>;
+                                        port@0 {
+                                                reg = <0>;
+                                                imx728_out2: endpoint {
+                                                        vc-id = <0>;
+                                                        port-index = <4>;
+                                                        bus-width = <4>;
+                                                        remote-endpoint = <&imx728_csi_in2>;
+                                                };
+                                        };
+                                };
+                        };
+
+                }; 
+
+                i2c@1 {
+                        ox08b40_g@23 {
+                                compatible = "nvidia,ox08b40";
+                                reg = <0x23>;
+                                devnode = "video03";
+                                reg_mux = <1>;
+                                physical_w = "15.0";
+                                physical_h = "12.5";
+
+                                sensor_model ="ox08b40";
+
+                                post_crop_frame_drop = "0";
+
+                                use_decibel_gain = "true";      
+
+                                        delayed_gain = "true";
+
+                                use_sensor_mode_id = "true";
+                                mode0 {
+                                        mclk_khz = "27000";
+                                        tegra_sinterface = "serial_g";
+                                        phy_mode = "DPHY";
+                                        vc_id = "0";
+                                        num_lanes = "4";
+                                        discontinuous_clk = "no";
+                                        dpcm_enable = "false";
+                                        cil_settletime = "0";
+                                        dynamic_pixel_bit_depth = "16";
+                                        csi_pixel_bit_depth = "16";
+                                        mode_type = "yuv";
+                                        pixel_phase = "uyvy";
+
+                                        active_w = "3840";
+                                        active_h = "2160";
+                                        readout_orientation = "0";
+                                        line_length = "5000";
+                                        inherent_gain = "1";
+                                        mclk_multiplier = "2";
+                                        pix_clk_hz = "168750000";
+                                        serdes_pix_clk_hz = "375000000";
+
+                                        gain_factor = "10";
+                                        min_gain_val = "0"; 
+                                        max_gain_val = "480"; 
+                                        step_gain_val = "3"; 
+                                        default_gain = "0";
+                                        min_hdr_ratio = "1";
+                                        max_hdr_ratio = "1";
+                                        framerate_factor = "1000000";
+                                        min_framerate = "30000000";
+                                        max_framerate = "30000000";
+                                        step_framerate = "1";
+                                        default_framerate = "30000000";
+                                        exposure_factor = "1000000";
+                                        min_exp_time = "30"; 
+                                        max_exp_time = "33000";
+                                        step_exp_time = "1";
+                                        default_exp_time = "30000"; 
+                                        embedded_metadata_height = "0";
+
+                                };
+                                ports {
+                                        #address-cells = <1>;
+                                        #size-cells = <0>;
+                                        port@0 {
+                                                reg = <0>;
+                                                imx728_out3: endpoint {
+                                                        vc-id = <0>;
+                                                        port-index = <5>;
+                                                        bus-width = <4>;
+                                                        remote-endpoint = <&imx728_csi_in3>;
+                                                };
+                                        };
+                                };
+                        };
+                }; 
+        };
+};
+
+
+};
+
+/ {
+
+	tcp: tegra-camera-platform {
+		compatible = "nvidia, tegra-camera-platform";
+		/**
+		* Physical settings to calculate max ISO BW
+		*
+		* num_csi_lanes = <>;
+		* Total number of CSI lanes when all cameras are active
+		*
+		* max_lane_speed = <>;
+		* Max lane speed in Kbit/s
+		*
+		* min_bits_per_pixel = <>;
+		* Min bits per pixel
+		*
+		* vi_peak_byte_per_pixel = <>;
+		* Max byte per pixel for the VI ISO case
+		*
+		* vi_bw_margin_pct = <>;
+		* Vi bandwidth margin in percentage
+		*
+		* max_pixel_rate = <>;
+		* Max pixel rate in Kpixel/s for the ISP ISO case
+		*
+		* isp_peak_byte_per_pixel = <>;
+		* Max byte per pixel for the ISP ISO case
+		*
+		* isp_bw_margin_pct = <>;
+		* Isp bandwidth margin in percentage
+		*/
+		num_csi_lanes = <16>;
+//#ifdef CAM_SERDES_GMSL)
+		max_lane_speed = <1500000>;
+//#else	// CAM_SERDES_FPDL
+//		max_lane_speed = <1500000>;	// FIX:?
+//#endif
+		min_bits_per_pixel = <10>;	// FIX:* 10
+		vi_peak_byte_per_pixel = <2>;
+		vi_bw_margin_pct = <25>;
+		//max_pixel_rate = <7500000>;	// FIX:? 160|200|300|750
+		isp_peak_byte_per_pixel = <5>;
+		isp_bw_margin_pct = <25>;
+
+		/**
+		 * The general guideline for naming badge_info contains 3 parts, and is as follows,
+		 * The first part is the camera_board_id for the module; if the module is in a FFD
+		 * platform, then use the platform name for this part.
+		 * The second part contains the position of the module, ex. "rear" or "front".
+		 * The third part contains the last 6 characters of a part number which is found
+		 * in the module's specsheet from the vender.
+		 */
+		modules {
+			module0 {
+				badge = "imx728_rear";
+				position = "rear";
+				orientation = "1";
+				drivernode0 {
+					/* Declare PCL support driver (classically known as guid)  */
+					pcl_id = "v4l2_sensor";
+					/* Driver v4l2 device name */
+					devname = "ox08b40 30-0023";
+					/* Declare the device-tree hierarchy to driver instance */
+					proc-device-tree = "/proc/device-tree/i2c@3180000/tca9543@72/i2c@0/ox08b40_a@23";
+				};
+			};
+                        module1 {
+                                badge = "imx728_front";
+                                position = "front";
+                                orientation = "1";
+                                drivernode0 {
+                                        /* Declare PCL support driver (classically known as guid)  */
+                                        pcl_id = "v4l2_sensor";
+                                        /* Driver v4l2 device name */
+                                        devname = "ox08b40 31-0023";
+                                        /* Declare the device-tree hierarchy to driver instance */
+                                        proc-device-tree = "/proc/device-tree/i2c@3180000/tca9543@72/i2c@1/ox08b40_c@23";
+                                };
+                        };
+                        module2 {
+                                badge = "imx728_left";
+                                position = "left";
+                                orientation = "1";
+                                drivernode0 {
+                                        pcl_id = "v4l2_sensor";
+                                        devname = "ox08b40 32-0023";
+                                        proc-device-tree = "/proc/device-tree/i2c@3180000/tca9543@73/i2c@0/ox08b40_e@23";
+                                };
+                        };
+                        module3 {
+                                badge = "imx728_right";
+                                position = "right";
+                                orientation = "1";
+                                drivernode0 {
+                                        pcl_id = "v4l2_sensor";
+                                        devname = "ox08b40 33-0023";
+                                        proc-device-tree = "/proc/device-tree/i2c@3180000/tca9543@73/i2c@1/ox08b40_g@23";
+                                };
+                        }; 
+		};
+	};
+};
+
+
