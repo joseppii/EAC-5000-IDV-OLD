@@ -1,0 +1,64 @@
+[submodule "kernel/nvgpu"]
+	path = kernel/nvgpu
+	url = git://nv-tegra.nvidia.com/linux-nvgpu.git
+	branch = R35.4.1
+[submodule "kernel/nvidia"]
+	path = kernel/nvidia
+	url = git://nv-tegra.nvidia.com/linux-nvidia.git
+	branch = R35.4.1
+[submodule "hardware/nvidia/platform/tegra/common"]
+	path = hardware/nvidia/platform/tegra/common
+	url = git://nv-tegra.nvidia.com/device/hardware/nvidia/platform/tegra/common.git
+	branch = R35.4.1
+[submodule "hardware/nvidia/soc/t19x"]
+	path = hardware/nvidia/soc/t19x
+	url = git://nv-tegra.nvidia.com/device/hardware/nvidia/soc/t19x.git
+	branch = R35.4.1
+[submodule "hardware/nvidia/platform/t19x/galen/kernel-dts"]
+	path = hardware/nvidia/platform/t19x/galen/kernel-dts
+	url = git://nv-tegra.nvidia.com/device/hardware/nvidia/platform/t19x/stardust-dts.git
+	branch = R35.4.1
+[submodule "hardware/nvidia/platform/t19x/jakku/kernel-dts"]
+	path = hardware/nvidia/platform/t19x/jakku/kernel-dts
+	url = git://nv-tegra.nvidia.com/device/hardware/nvidia/platform/t19x/jakku-dts.git
+	branch = R35.4.1
+[submodule "kernel/kernel-5.10"]
+	path = kernel/kernel-5.10
+	url = git://nv-tegra.nvidia.com/linux-5.10.git
+	branch = R35.4.1
+[submodule "hardware/nvidia/platform/t23x/prometheus/kernel-dts"]
+	path = hardware/nvidia/platform/t23x/prometheus/kernel-dts
+	url = git://nv-tegra.nvidia.com/device/hardware/nvidia/platform/t23x/prometheus-dts
+	branch = R35.4.1
+[submodule "hardware/nvidia/platform/t23x/concord/kernel-dts"]
+	path = hardware/nvidia/platform/t23x/concord/kernel-dts
+	url = git://nv-tegra.nvidia.com/device/hardware/nvidia/platform/t23x/concord-dts.git
+	branch = R35.4.1
+[submodule "hardware/nvidia/platform/t23x/p3768/kernel-dts"]
+	path = hardware/nvidia/platform/t23x/p3768/kernel-dts
+	url = git://nv-tegra.nvidia.com/device/hardware/nvidia/platform/t23x/p3768-dts.git
+	branch = R35.4.1
+[submodule "hardware/nvidia/platform/t23x/common/kernel-dts"]
+	path = hardware/nvidia/platform/t23x/common/kernel-dts
+	url = git://nv-tegra.nvidia.com/device/hardware/nvidia/platform/t23x/common-dts.git
+	branch = R35.4.1
+[submodule "hardware/nvidia/platform/t19x/galen-industrial/kernel-dts"]
+	path = hardware/nvidia/platform/t19x/galen-industrial/kernel-dts
+	url = git://nv-tegra.nvidia.com/device/hardware/nvidia/platform/t19x/galen-industrial-dts.git
+	branch = R35.4.1
+[submodule "hardware/nvidia/platform/t19x/mccoy/kernel-dts"]
+	path = hardware/nvidia/platform/t19x/mccoy/kernel-dts
+	url = git://nv-tegra.nvidia.com/device/hardware/nvidia/platform/t19x/mccoy-dts.git
+	branch = R35.4.1
+[submodule "hardware/nvidia/soc/t23x"]
+	path = hardware/nvidia/soc/t23x
+	url = git://nv-tegra.nvidia.com/device/hardware/nvidia/soc/t23x.git
+	branch = R35.4.1
+[submodule "hardware/nvidia/soc/tegra"]
+	path = hardware/nvidia/soc/tegra
+	url = git://nv-tegra.nvidia.com/device/hardware/nvidia/soc/tegra.git
+	branch = R35.4.1
+[submodule "hardware/nvidia/platform/t19x/common"]
+	path = hardware/nvidia/platform/t19x/common
+	url = git://nv-tegra.nvidia.com/device/hardware/nvidia/platform/t19x/common.git
+	branch = R35.4.1
